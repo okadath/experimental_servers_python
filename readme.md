@@ -66,7 +66,10 @@ aun me falta saber como subir las imagenes al statics por medio de la ruta del f
 
 al aprecer se puede configurar directamente cn nginx y este servira los archivos y demas como cn los deploys de django
 
-ToDo
+para servir staticfiles hay que instalar
+install aiofiles
+
+ToDo:
 
 + guardar archivos en statics
 + obtener la ruta del statics(como reversse en django)
@@ -76,6 +79,7 @@ ToDo
 + usar algun token
 + limitar un chat a solo los contactos del usuario
 + verificar el deploy cn https y nginx(a mano o cn traefik?)
+https://blog.nawaz.info/deploy-fastapi-application-on-ubuntu-with-nginx-gunicorn-and-uvicorn
 + admin de fastapi?
 + ORM?
 + integrar los websockets cn vue

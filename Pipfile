@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
 fastapi = {extras = ["all"], version = "*"}
@@ -12,6 +13,8 @@ djongo = "*"
 django-import-export = "*"
 sqlalchemy = "*"
 databases = {extras = ["sqlite"], version = "*"}
+python-multipart = "*"
+aiofiles = "*"
 
 [requires]
 python_version = "3.8"

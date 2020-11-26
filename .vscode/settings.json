@@ -1,0 +1,14 @@
+
+
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/*.pyc": true,
+        "**/__pycache__": true
+    },
+    "python.pythonPath": "/home/okadath/.local/share/virtualenvs/fast_api_test-UJsVJFfs/bin/python"
+}

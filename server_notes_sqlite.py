@@ -2,8 +2,10 @@ from typing import List
 
 import databases
 import sqlalchemy
-from fastapi import FastAPI
+from fastapi import FastAPI,File, UploadFile
 from pydantic import BaseModel
+import shutil
+from fastapi.staticfiles import StaticFiles
 
 # SQLAlchemy specific code, as with any other app
 # DATABASE_URL = "sqlite:///./test.db"
@@ -20,6 +22,7 @@ notes = sqlalchemy.Table(
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("text", sqlalchemy.String),
     sqlalchemy.Column("completed", sqlalchemy.Boolean),
+    
 )
 
 
@@ -41,7 +44,7 @@ class Note(BaseModel):
 
 
 app = FastAPI()
-
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.on_event("startup")
 async def startup():
@@ -65,6 +68,19 @@ async def create_note(note: NoteIn):
     last_record_id = await database.execute(query)
     return {**note.dict(), "id": last_record_id}
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile = File(...)):
+    return {"filename": file.filename}
+
+@app.post("/uploadfile2/")
+async def image_up(image: UploadFile = File(...)):
+    print(image.filename)
+    print( request.url_for("static"))
+    with open(str(image.filename), "wb") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+    
+    return {"filename": image.filename}
+
+@app.get("/img/{img}")
+async def read_index(img:str):
+    return FileResponse(str(img))

@@ -15,6 +15,9 @@ sqlalchemy = "*"
 databases = {extras = ["sqlite"], version = "*"}
 python-multipart = "*"
 aiofiles = "*"
+fastapi-users = {extras = ["sqlalchemy"], version = "*"}
+passlib = {extras = ["bcrypt"], version = "*"}
+python-jose = "*"
 
 [requires]
 python_version = "3.8"

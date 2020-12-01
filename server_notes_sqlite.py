@@ -98,7 +98,7 @@ async def read_index(img:str):
     # print(image.filename)
     # print( parent_dir_path)
     # print(static_root_absolute) 
-    print(img)
+    # print(img)
     return FileResponse(os.path.join("static", img))
  
     # return "Hello, world!"

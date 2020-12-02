@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance to serve MyApp
+After=network.target
+
+
+[Service]
+User=<username>
+Group=www-data
+WorkingDirectory=/home/experimental_servers_python
+Environment="PATH=/home/experimental_servers_python/venv/bin"
+ExecStart=/home/experimental_servers_python/venv/bin/gunicorn -w 4 -k uvicorn.workers.UvicornWorker users_fast:app
+
+[Install]
+WantedBy=multi-user.target

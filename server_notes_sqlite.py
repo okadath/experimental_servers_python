@@ -1,16 +1,18 @@
+import os
+import shutil
 from typing import List
-from fastapi.responses import FileResponse
+
 import databases
 import sqlalchemy
-from fastapi import FastAPI,File, UploadFile
-from pydantic import BaseModel
-import shutil
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-import os 
+from pydantic import BaseModel
+
 parent_dir_path = os.path.dirname(os.path.realpath(__file__))
-import uvicorn
 from pathlib import Path
 
+import uvicorn
 
 current_file = Path(__file__)
 current_file_dir = current_file.parent

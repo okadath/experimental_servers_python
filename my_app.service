@@ -4,7 +4,7 @@ After=network.target
 
 
 [Service]
-User=<username>
+User=root
 Group=www-data
 WorkingDirectory=/home/experimental_servers_python
 Environment="PATH=/home/experimental_servers_python/venv/bin"

@@ -107,3 +107,20 @@ async def read_index(img:str):
 
 # if __name__ == "__main__":
 #     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse
+
+some_file_path = "static/chess.mp4"
+# app = FastAPI()
+
+
+@app.get("/")
+async def main():
+    return FileResponse(some_file_path)
+@app.get("/v")
+def main2():
+    file_like = open(some_file_path, mode="rb")
+    return StreamingResponse(file_like, media_type="video/mp4")

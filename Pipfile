@@ -18,6 +18,9 @@ aiofiles = "*"
 fastapi-users = {extras = ["sqlalchemy"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 python-jose = "*"
+pytest = "*"
+coverage = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.8"

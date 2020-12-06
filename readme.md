@@ -16,7 +16,7 @@ para correr pipenv en vscode
 
 https://www.benjaminpack.com/blog/vs-code-python-pipenv/
 
-en el ambiente corres 
+en el ambiente corres
 
 ```sh
 pipenv --py
@@ -57,12 +57,9 @@ pipenv install --dev pylint
 
 https://levelup.gitconnected.com/how-to-save-uploaded-files-in-fastapi-90786851f1d3
 
-
-
 ya podemos subir imagenes al server y servirlas estaticamente
 
 aun me falta saber como subir las imagenes al statics por medio de la ruta del folder
-
 
 al aprecer se puede configurar directamente cn nginx y este servira los archivos y demas como cn los deploys de django
 
@@ -71,21 +68,14 @@ install aiofiles
 
 ToDo:
 
-+ guardar archivos en statics
-+ obtener la ruta del statics(como reversse en django)
 + guardar a mano(ORM) los mensajes del websocket
 + hacer el server de notificaciones
 + integrar el modelo de usuarios
-+ usar algun token
 + limitar un chat a solo los contactos del usuario
-+ verificar el deploy cn https y nginx(a mano o cn traefik?)
 https://blog.nawaz.info/deploy-fastapi-application-on-ubuntu-with-nginx-gunicorn-and-uvicorn
 + admin de fastapi?
 + ORM?
 + integrar los websockets cn vue
-
-
-
 
 ## Django+Mongo DB = Djongo
 
@@ -94,7 +84,7 @@ hay que instalar mongo en ubuntu, y mongo compass para importar la info:
 mongo guarda sus archivos en la siguiente direccion:
 
 cat /var/lib/mongodb/
-como archivos collection-7-6296793190435309642.wt 
+como archivos collection-7-6296793190435309642.wt
 
 ```py
 DATABASES = {
@@ -122,3 +112,23 @@ mongodb-compass;
 
 desde ahi se pueden hacer importaciones/exportaciones como con el modulo import export con django a partir de un csv
 
+uvicorn users_fast:app --reload --host 0.0.0.0 --port 5000
+
+## Testing
+
+instalar
+
+```shell
+pipenv install pytest coverage  pytest-cov  
+```
+
+y ejecutar para ver los errores
+pytest --cov-report term --cov=main
+py.test --cov-report term --cov=. test.py
+
+crear un archivo pytest.ini para configuraciones de los tests y agregar:
+
+```yml
+[pytest]
+addopts = -p no:warnings
+```

@@ -104,7 +104,9 @@
 
 
 # @app.post("/auth/jwt/refresh")
-# async def refresh_jwt(response: Response, user=Depends(fastapi_users.get_current_active_user)):
+# async def read_item(item_id: int):
+
+# async def refresh_jwt( response: Response, user=Depends(fastapi_users.get_current_active_user)):
 #     print(user)
 #     print(response)
 #     return await jwt_authentication.get_login_response(user, response)

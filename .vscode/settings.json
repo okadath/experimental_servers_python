@@ -10,5 +10,8 @@
         "**/*.pyc": true,
         "**/__pycache__": true
     },
-    "python.pythonPath": "/home/okadath/.local/share/virtualenvs/fast_api_test-UJsVJFfs/bin/python"
+    "python.pythonPath": "/home/okadath/.local/share/virtualenvs/fast_api_test-UJsVJFfs/bin/python",
+    "python.linting.pylintEnabled": false,
+    "python.linting.mypyEnabled": true,
+    "python.linting.enabled": true
 }

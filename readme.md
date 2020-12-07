@@ -66,17 +66,6 @@ al aprecer se puede configurar directamente cn nginx y este servira los archivos
 para servir staticfiles hay que instalar
 install aiofiles
 
-ToDo:
-
-+ guardar a mano(ORM) los mensajes del websocket
-+ hacer el server de notificaciones
-+ integrar el modelo de usuarios
-+ limitar un chat a solo los contactos del usuario
-https://blog.nawaz.info/deploy-fastapi-application-on-ubuntu-with-nginx-gunicorn-and-uvicorn
-+ admin de fastapi?
-+ ORM?
-+ integrar los websockets cn vue
-
 ## Django+Mongo DB = Djongo
 
 hay que instalar mongo en ubuntu, y mongo compass para importar la info:
@@ -123,8 +112,11 @@ pipenv install pytest coverage  pytest-cov
 ```
 
 y ejecutar para ver los errores
+
+```sh
 pytest --cov-report term --cov=main
 py.test --cov-report term --cov=. test.py
+```
 
 crear un archivo pytest.ini para configuraciones de los tests y agregar:
 
@@ -132,3 +124,49 @@ crear un archivo pytest.ini para configuraciones de los tests y agregar:
 [pytest]
 addopts = -p no:warnings
 ```
+
+## ToDo
+
++ guardar a mano(ORM) los mensajes del websocket
++ hacer el server de notificaciones
++ integrar el modelo de usuarios
++ limitar un chat a solo los contactos del usuario
+https://blog.nawaz.info/deploy-fastapi-application-on-ubuntu-with-nginx-gunicorn-and-uvicorn
++ admin de fastapi?
++ integrar los websockets cn vue
++ probar sockets con el deploy y un dominio
+
+
+
+creo que usaremos mongo x su facilidad de escalado, pero tendre que resolver a mano el problema de delete on cascade, para escalar estos servers al parecer mongo internamente usa algo llamado Sharded Cluster que distribuye la informacion entre varias instancias horizontalmente(el escalado vertical es darle mas recursos a una maquina)
+aun necesito investigar el ORM Motor que es mongo asincrono para python, aunque quiza y asi lo dejo
+por que no hay gran diferencia en fast api, pero no se si en el modelo de usuarios
+
+necesito analizar las operiaciones de FK criticas apra diseñar correctamente esta o futuras coleciones en mongo  
+
+al parecer se puede usar correctamente con Motor usandolo segun la documentacion de fastapi users, solo hay que usar las collections correctas
+
+
+
+funciones en motor(casi iguales a als de cualquier ORM)
+https://motor.readthedocs.io/en/stable/tutorial-asyncio.html
+
+se me ocurre hacer una lista de ids por cada elemento dependiente y en el en cascada borrarlo pero me parecce que no es una operacion critica, se dejarian vivas las cosas commo  comentarios, chats, tags, quiza hasta las fotos , pero quiza si habria de hacerlo con los posts y con fotos, quiza hasta videos, es mejor usar almacenamiento local para fotos y videso y en la db solo almacenar rutas, asi me parece que no seria necesario hacer algun join o algo asi
+supongo que tendre que indicar que el usuario elimino su perfil
+
+creo que hacer un admin desde cierto punto es impractico, pero por si acaso hay que tratar de hacerlo con vue, necesitaria algun tipo de scaffolding
+
+
+ejemplos fastapi mongo
+https://github.com/Youngestdev/async-fastapi-mongo
+https://github.com/rbcabreraUPM/fastapi-basic-mongodb-example
+
+
+ejemplo proyecto
+https://testdriven.io/blog/fastapi-mongo/#mongodb
+
+creo que si hay pks voy a tener que insertar los ids, pero si se borra el elemento de la pk tendre que hacer alguna validacion a mano indicando que no existe por la falta de cascada
+https://docs.mongodb.com/manual/core/data-model-design/#data-modeling-referencing
+
+eventbrite usa mongo
+https://es.slideshare.net/interviewcoach/building-a-social-network-with-mongodb-74467821

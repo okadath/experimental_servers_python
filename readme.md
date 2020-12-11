@@ -170,3 +170,7 @@ https://docs.mongodb.com/manual/core/data-model-design/#data-modeling-referencin
 
 eventbrite usa mongo
 https://es.slideshare.net/interviewcoach/building-a-social-network-with-mongodb-74467821
+
+
+correr si esta en carpetas como si estuviera en paquete, como gunicorn, con . :
+uvicorn example_db.main:app --reload --host 0.0.0.0 --port 8000

@@ -21,6 +21,8 @@ python-jose = "*"
 pytest = "*"
 coverage = "*"
 pytest-cov = "*"
+pydantic = {extras = ["email"], version = "*"}
+motor = "*"
 
 [requires]
 python_version = "3.8"

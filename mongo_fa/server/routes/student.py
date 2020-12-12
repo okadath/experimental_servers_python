@@ -22,6 +22,8 @@ from fastapi import   HTTPException
 async def add_student_data(student: StudentSchema = Body(...)):
     student = jsonable_encoder(student)
     new_student = await add_student(student)
+    if new_student==[]:
+        raise HTTPException(status_code=404, detail="Student name already exists")
     return ResponseModel(new_student, "Student added successfully.")
 
 

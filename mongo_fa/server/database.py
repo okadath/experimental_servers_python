@@ -11,6 +11,8 @@ database = client.studens
 
 student_collection = database.get_collection("students_collection")
 
+student_collection.create_index("fullname", unique=True)
+# database.command(db.collection_name.createIndex( {field_name : 1} , {unqiue : true} ))
 
 def student_helper(student) -> dict:
     return {
@@ -31,9 +33,15 @@ async def retrieve_students():
     return students
 
 async def add_student(student_data:dict)->dict:
-    student=await student_collection.insert_one(student_data)#ya trae inserted_id?
+    try:
+        student=await student_collection.insert_one(student_data)#ya trae inserted_id?
+    except  Exception as e:
+        print(e)
+        # raise e
+        return []
     new_student= await student_collection.find_one( {"_id":student.inserted_id})
     return student_helper(new_student)
+
 
 
 async def retrieve_student(id:str)->dict:

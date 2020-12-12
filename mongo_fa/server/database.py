@@ -37,10 +37,11 @@ async def add_student(student_data:dict)->dict:
 
 
 async def retrieve_student(id:str)->dict:
-    student= await  student_collection.find_one({"_id":ObjectId(id)})
-    if student:
-        return student_helper(student)
-    return {"error":"no existe"}
+    if ObjectId.is_valid(id):
+        student= await  student_collection.find_one({"_id":ObjectId(id)})
+        if student:
+            return student_helper(student)
+    return {"error":"error"}
 
 async def update_student(id:str,data:dict):
     if len(data)<1:

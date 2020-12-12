@@ -22,6 +22,9 @@ class StudentSchema(BaseModel):
             }
 
         }
+# class StudentGetOne(StudentSchema):
+#     id: ObjectId = Field(description="User id")
+
 
 class UpdateStudentModel(BaseModel):
     fullname:Optional[str]

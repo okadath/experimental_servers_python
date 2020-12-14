@@ -53,3 +53,35 @@ async def get_student_data(id:str):
         return ResponseModel(student, "Student data retrieved successfully")
     return ErrorResponseModel("An error occurred.", 404, "Student doesn't exist.")
 ```
+
+
+si se necesita authorization se usa el paquete de fast api users
+y a partir de el en las funciones del router
+se agregan las dependencias:
+
+https://frankie567.github.io/fastapi-users/usage/dependency-callables/
+
+```py
+from fastapi import FastAPI
+
+app = FastAPI()
+fastapi_users = FastAPIUsers(
+    user_db,
+    [jwt_authentication],
+    User,
+    UserCreate,
+    UserUpdate,
+    UserDB,
+)
+
+router = APIRouter()
+from fastapi import   HTTPException
+from fastapi import Depends
+
+@router.get("/{id}", response_description="Profile data retrieved")
+async def get_profile_data(id:str,user: User = Depends(fastapi_users.get_current_user)):
+    ...
+
+app.include_router(router, tags=["Profile"], prefix="/profile")
+
+```

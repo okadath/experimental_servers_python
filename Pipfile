@@ -15,7 +15,7 @@ sqlalchemy = "*"
 databases = {extras = ["sqlite"], version = "*"}
 python-multipart = "*"
 aiofiles = "*"
-fastapi-users = {extras = ["sqlalchemy"], version = "*"}
+fastapi-users = {extras = ["mongodb"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 python-jose = "*"
 pytest = "*"

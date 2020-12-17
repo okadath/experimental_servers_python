@@ -85,3 +85,20 @@ async def get_profile_data(id:str,user: User = Depends(fastapi_users.get_current
 app.include_router(router, tags=["Profile"], prefix="/profile")
 
 ```
+
+agregar files:
+
+install python-multipart
+
+para evaluar si la funcion es una imagen:
+
+```py
+from fastapi import FastAPI, File, UploadFile
+import shutil
+import imghdr
+
+@app.post("/savefile/")
+async def image(image: UploadFile = File(...)):
+    print(imghdr.what(image.file))
+```
+

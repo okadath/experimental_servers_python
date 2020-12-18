@@ -14,7 +14,7 @@ uvicorn nombrearchivo:nombre_server(x default app) --reload
 
 para correr pipenv en vscode
 
-https://www.benjaminpack.com/blog/vs-code-python-pipenv/
+<https://www.benjaminpack.com/blog/vs-code-python-pipenv/>
 
 en el ambiente corres
 
@@ -55,7 +55,7 @@ e instalas el linter de python
 pipenv install --dev pylint
 ```
 
-https://levelup.gitconnected.com/how-to-save-uploaded-files-in-fastapi-90786851f1d3
+<https://levelup.gitconnected.com/how-to-save-uploaded-files-in-fastapi-90786851f1d3>
 
 ya podemos subir imagenes al server y servirlas estaticamente
 
@@ -125,19 +125,6 @@ crear un archivo pytest.ini para configuraciones de los tests y agregar:
 addopts = -p no:warnings
 ```
 
-## ToDo
-
-+ guardar a mano(ORM) los mensajes del websocket
-+ hacer el server de notificaciones
-+ integrar el modelo de usuarios
-+ limitar un chat a solo los contactos del usuario
-https://blog.nawaz.info/deploy-fastapi-application-on-ubuntu-with-nginx-gunicorn-and-uvicorn
-+ admin de fastapi?
-+ integrar los websockets cn vue
-+ probar sockets con el deploy y un dominio
-
-
-
 creo que usaremos mongo x su facilidad de escalado, pero tendre que resolver a mano el problema de delete on cascade, para escalar estos servers al parecer mongo internamente usa algo llamado Sharded Cluster que distribuye la informacion entre varias instancias horizontalmente(el escalado vertical es darle mas recursos a una maquina)
 aun necesito investigar el ORM Motor que es mongo asincrono para python, aunque quiza y asi lo dejo
 por que no hay gran diferencia en fast api, pero no se si en el modelo de usuarios
@@ -146,31 +133,150 @@ necesito analizar las operiaciones de FK criticas apra diseñar correctamente es
 
 al parecer se puede usar correctamente con Motor usandolo segun la documentacion de fastapi users, solo hay que usar las collections correctas
 
-
-
 funciones en motor(casi iguales a als de cualquier ORM)
-https://motor.readthedocs.io/en/stable/tutorial-asyncio.html
+<https://motor.readthedocs.io/en/stable/tutorial-asyncio.html>
 
 se me ocurre hacer una lista de ids por cada elemento dependiente y en el en cascada borrarlo pero me parecce que no es una operacion critica, se dejarian vivas las cosas commo  comentarios, chats, tags, quiza hasta las fotos , pero quiza si habria de hacerlo con los posts y con fotos, quiza hasta videos, es mejor usar almacenamiento local para fotos y videso y en la db solo almacenar rutas, asi me parece que no seria necesario hacer algun join o algo asi
 supongo que tendre que indicar que el usuario elimino su perfil
 
 creo que hacer un admin desde cierto punto es impractico, pero por si acaso hay que tratar de hacerlo con vue, necesitaria algun tipo de scaffolding
 
-
 ejemplos fastapi mongo
-https://github.com/Youngestdev/async-fastapi-mongo
-https://github.com/rbcabreraUPM/fastapi-basic-mongodb-example
-
+<https://github.com/Youngestdev/async-fastapi-mongo>
+<https://github.com/rbcabreraUPM/fastapi-basic-mongodb-example>
 
 ejemplo proyecto
-https://testdriven.io/blog/fastapi-mongo/#mongodb
+<https://testdriven.io/blog/fastapi-mongo/#mongodb>
 
 creo que si hay pks voy a tener que insertar los ids, pero si se borra el elemento de la pk tendre que hacer alguna validacion a mano indicando que no existe por la falta de cascada
-https://docs.mongodb.com/manual/core/data-model-design/#data-modeling-referencing
+<https://docs.mongodb.com/manual/core/data-model-design/#data-modeling-referencing>
 
 eventbrite usa mongo
-https://es.slideshare.net/interviewcoach/building-a-social-network-with-mongodb-74467821
-
+<https://es.slideshare.net/interviewcoach/building-a-social-network-with-mongodb-74467821>
 
 correr si esta en carpetas como si estuviera en paquete, como gunicorn, con . :
+
+```sh
 uvicorn example_db.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+## manual test cruds fastapi+users+mongo
+
+instalar
+
+```sh
+pipenv install pydantic[email] motor
+```
+
+para saber el puerto de mongo
+
+```sh
+mongo
+db.serverCmdLineOpts()
+#o
+sudo lsof -iTCP -sTCP:LISTEN | grep mongo
+```
+
+ejecutar con
+
+```sh
+uvicorn mongo_fa.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+pyndatic no tiene por que validar otros tipos de datos
+asi que cosas como el ObjectId lo tengo que hacer yo
+
+si el id no es del tipo, truena el server, hay que hacer la siguiente validacion en database.py:
+
+```py
+from bson.objectid import ObjectId
+
+async def retrieve_student(id:str)->dict:
+    if ObjectId.is_valid(id):
+        student= await  student_collection.find_one({"_id":ObjectId(id)})
+        if student:
+            return student_helper(student)
+    return {"error":"error"}
+```
+
+y esta debe ser validada en la ruta a evaluar, lanzando una excepcion en caso de error:
+
+```py
+from fastapi import   HTTPException
+
+@router.get("/{id}", response_description="Student data retrieved")
+async def get_student_data(id:str):
+    student = await retrieve_student(id)
+    if student=={"error":"error"}:
+        raise HTTPException(status_code=404, detail="Student doesn't exist.")
+    if student:
+        return ResponseModel(student, "Student data retrieved successfully")
+    return ErrorResponseModel("An error occurred.", 404, "Student doesn't exist.")
+```
+
+si se necesita authorization se usa el paquete de fast api users
+y a partir de el en las funciones del router
+se agregan las dependencias:
+
+<https://frankie567.github.io/fastapi-users/usage/dependency-callables/>
+
+```py
+from fastapi import FastAPI
+
+app = FastAPI()
+fastapi_users = FastAPIUsers(
+    user_db,
+    [jwt_authentication],
+    User,
+    UserCreate,
+    UserUpdate,
+    UserDB,
+)
+
+router = APIRouter()
+from fastapi import   HTTPException
+from fastapi import Depends
+
+@router.get("/{id}", response_description="Profile data retrieved")
+async def get_profile_data(id:str,user: User = Depends(fastapi_users.get_current_user)):
+    ...
+
+app.include_router(router, tags=["Profile"], prefix="/profile")
+
+```
+
+agregar files:
+
+install python-multipart
+
+para evaluar si la funcion es una imagen:
+
+```py
+from fastapi import FastAPI, File, UploadFile
+import shutil
+import imghdr
+
+@app.post("/savefile/")
+async def image(image: UploadFile = File(...)):
+    print(imghdr.what(image.file))
+```
+
+para pagos usaremos stripe como en flask
+
+se ve como paypal pero mas facil
+
+<https://testdriven.io/blog/flask-stripe-tutorial/>
+
+## ToDo
+
++ guardar a mano(ORM) los mensajes del websocket
++ hacer el server de notificaciones  
++ integrar los websockets cn vue
++ probar sockets con el deploy y un dominio
+
+## por completar(no es de muerte)
+
++ hay pequeñas funcionalidades de video que arreglar
++ integrar la validacion y miniaturizacion de imagenes
++ uuid
++ deploy <https://blog.nawaz.info/deploy-fastapi-application-on-ubuntu-with-nginx-gunicorn-and-uvicorn>

@@ -267,6 +267,10 @@ se ve como paypal pero mas facil
 
 <https://testdriven.io/blog/flask-stripe-tutorial/>
 
+### sockets
+
+var ws = new WebSocket("ws://67.205.154.215/ws");
+
 ## ToDo
 
 + guardar a mano(ORM) los mensajes del websocket
@@ -280,3 +284,73 @@ se ve como paypal pero mas facil
 + integrar la validacion y miniaturizacion de imagenes
 + uuid
 + deploy <https://blog.nawaz.info/deploy-fastapi-application-on-ubuntu-with-nginx-gunicorn-and-uvicorn>
+
+ejecutandolo con  gunicorn hay mayor performance
+hay que usar artillery instalandolo en yarn
+
+hay que crear un yaml con la configuracion del test
+
+```yaml
+config:
+    target: "ws://localhost:8000/ws"
+    ensure:
+      maxErrorRate: 3
+    phases:
+      - duration: 200
+        arrivalRate: 220
+        name: "Max load"
+scenarios:
+  - engine: "ws"
+    flow:
+      - loop:
+          - send: "hello"
+          - think: 5
+        count: 40
+```
+
+```yml
+config:
+    target: "ws://localhost:8000/ws"
+    ensure:
+      maxErrorRate: 3
+    phases:
+      - duration: 240
+        arrivalRate: 200
+        name: "Max load"
+scenarios:
+  - engine: "ws"
+    flow:
+      - send: "hello"
+      - think: 80
+      - send: "how are you?"
+      - think: 80
+      - send: "how are you?"
+      - think: 80
+      - send: "how are you?"
+```   
+
+para ejecutar el test:
+
+```sh
+yarn artillery run loadtest.yml --output result_13.json
+```
+
+para visualizarlo en grafixos
+
+```bash
+yarn artillery report result_12.json 
+```
+
+```bash
+gunicorn -w 4 -k uvicorn.workers.UvicornWorker ws_docs:app
+```
+
+IG inicio sin chat, no hasta marzo del 2013, salio en septiembre 2012, alcanzo 1 millon en 2 meses, alcanzo 20 millones en un año
+
+importa mas el server de notificaciones creo
+
+alcanza aproximadamente 25-28k de usuarios(x2, no se por que los duplica el test) antes de caerse, sin gunicorn solo aguanta 7(x2) concurrentes, y las peticiones las sigue manejando bien
+
+quiza haya que hacer un socket activable al abrirla pero aun asi no se que ocurra con todas las notificaciones
+
+checar si vue jala bien con ionic, tambien si lo compila, y si es asi las webnotifications

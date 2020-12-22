@@ -23,6 +23,7 @@ coverage = "*"
 pytest-cov = "*"
 pydantic = {extras = ["email"], version = "*"}
 motor = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"

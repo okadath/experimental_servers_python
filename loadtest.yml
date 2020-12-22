@@ -1,0 +1,15 @@
+config:
+    target: "ws://localhost:8000/ws"
+    ensure:
+      maxErrorRate: 3
+    phases:
+      - duration: 200
+        arrivalRate: 220
+        name: "Max load"
+scenarios:
+  - engine: "ws"
+    flow:
+      - loop:
+          - send: "hello"
+          - think: 5
+        count: 40
